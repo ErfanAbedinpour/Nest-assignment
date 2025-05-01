@@ -41,6 +41,11 @@ export class AuthService {
                 throw new BadRequestException(ErrorMessages.USER_NOT_FOUND)
 
             // TODO: Generate Token
+
+            const accessToken = ""
+            const refreshToken = ""
+            return { accessToken, refreshToken };
+
         } catch (err) {
             if (err instanceof HttpException)
                 throw err;
