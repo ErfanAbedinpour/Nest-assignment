@@ -97,3 +97,25 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+## TODO:
+- [ ] Write Role-Access-Control Guard
+- [ ] Authorization Guard
+- [ ] Write Test  For Guards
+- [ ] CRUD Product 
+- [ ] Write Test  product
+- [ ] Service For OpenApi For standardize Product Description And Store Both of them into Database
+- [ ] Serialize Product Information And User OpenApi Embedding Model For Creating Vector And Store them to Database
+- [ ] Write Route for get productId and return them and use The Product Vector for find similar Product And Ranking Them By One algorithem Based on similarity
+- [ ] Get Search Parameter (Limit,SimilarityValue)
+- [ ] Write E2E test
+
+## Standardize descriptions using AI:
+- Grammar and spelling correction
+
+- Unify description structure
+
+- Optimize content for search
+
+- Admin users should be able to create, edit, and delete products
+
