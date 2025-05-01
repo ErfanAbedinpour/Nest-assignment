@@ -2,6 +2,7 @@ import { BadRequestException, Injectable, InternalServerErrorException, Logger }
 import { UserRepository } from "./repository/abstract/user.repository";
 import { UserRole } from "../../schemas";
 import { MongoServerError } from "mongodb";
+import { ErrorMessages } from "../../errorResponses/errorResponse.enum ";
 
 @Injectable()
 export class UserService {
@@ -14,13 +15,12 @@ export class UserService {
             await this.userRepository.create({ email, name, password, role })
             return { msg: "User Created successfully" }
         } catch (err) {
+            // handling MongoException
             if (err instanceof MongoServerError) {
-                if (err.code === "1100") {
-
-                    throw new BadRequestException("'")
+                // if err.code === 11000 Means Email was registered before.
+                if (err.code === 11000) {
+                    throw new BadRequestException(ErrorMessages.UNIQUE_EMAIl)
                 }
-                // other implementing
-                //TODO: Handling 11000 Code for UniqueConstraint Exception for User Email
             }
             this.logger.error(err)
             throw new InternalServerErrorException()

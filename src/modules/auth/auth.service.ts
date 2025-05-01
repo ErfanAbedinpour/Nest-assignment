@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, Logger } from "@nestjs/common";
+import { HttpException, Injectable, InternalServerErrorException, Logger } from "@nestjs/common";
 import { UserService } from "../user/user.service";
 import { RegisterUserDTO } from "./DTO/register-user.dto";
 import { HashingService } from "./hashing/hashing.abstract";
@@ -11,12 +11,18 @@ export class AuthService {
 
     async registerUser(user: RegisterUserDTO) {
         try {
-            // should be HashPassword
-            await this.userService.createUser(user.name, user.email, user.password);
+            // hashPassword
+            const hashedPass = await this.argonHashing.hash(user.password);
+
+            await this.userService.createUser(user.name, user.email, hashedPass);
 
             return { msg: "User Registered successfully" }
 
         } catch (err) {
+            // if Error was returned is HttpException Instance Just throw it.
+            if (err instanceof HttpException)
+                throw err
+
             this.logger.error(err)
             throw new InternalServerErrorException()
         }
