@@ -29,17 +29,9 @@ export class MongoUserRepository implements UserRepository {
     }
 
 
-    async findById(id: string): Promise<UserDocument> {
-        try {
-            const user = await this.userModel.findById(id);
-            if (!user)
-                throw new RepositoryException(ErrorMessages.USER_NOT_FOUND)
+    findById(id: string): Promise<UserDocument | null> {
+        return this.userModel.findById(id);
 
-            return user;
-
-        } catch (err) {
-            throw err;
-        }
     }
 
 
@@ -65,5 +57,11 @@ export class MongoUserRepository implements UserRepository {
         } catch (err) {
             throw err
         }
+    }
+
+
+    findByEmail(email: string): Promise<UserDocument | null> {
+        return this.userModel.findOne({ email });
+
     }
 }

@@ -52,16 +52,6 @@ describe("MongoUserRepository", () => {
     })
 
 
-    it("Should be Throw Repository Error Because Document not found", async () => {
-        jest.spyOn(userModelMock, 'findById').mockResolvedValue(null)
-        try {
-            await repository.findById("wrong-object-id")
-        } catch (err) {
-            expect(err).toBeInstanceOf(RepositoryException)
-            expect(err.message).toEqual(ErrorMessages.USER_NOT_FOUND)
-        }
-    })
-
 
     it("Should be find UserDocument", async () => {
         jest.spyOn(userModelMock, 'findById').mockResolvedValue({ email: "test-mail", name: 'test-name' } as unknown as UserDocument)
@@ -69,8 +59,8 @@ describe("MongoUserRepository", () => {
 
         const result = await repository.findById("true-object-id");
 
-        expect(result.name).toEqual('test-name')
-        expect(result.email).toEqual('test-mail')
+        expect(result!.name).toEqual('test-name')
+        expect(result!.email).toEqual('test-mail')
         expect(userModelMock.findById).toHaveBeenCalledWith("true-object-id")
     })
 

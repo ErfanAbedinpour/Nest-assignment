@@ -1,8 +1,9 @@
-import { BadRequestException, Injectable, InternalServerErrorException, Logger } from "@nestjs/common";
+import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from "@nestjs/common";
 import { UserRepository } from "./repository/abstract/user.repository";
-import { UserRole } from "../../schemas";
-import { MongoServerError } from "mongodb";
+import { UserDocument, UserRole } from "../../schemas";
+import { MongoServerError, ObjectId } from "mongodb";
 import { ErrorMessages } from "../../errorResponses/errorResponse.enum ";
+import { RepositoryException } from "../../exception/respository.exception";
 
 @Injectable()
 export class UserService {
@@ -25,5 +26,26 @@ export class UserService {
             this.logger.error(err)
             throw new InternalServerErrorException()
         }
+    }
+
+
+    async findUserById(id: ObjectId): Promise<UserDocument> {
+        const user = await this.userRepository.findById(id.toString());
+
+        if (!user)
+            throw new NotFoundException(ErrorMessages.USER_NOT_FOUND)
+
+        return user;
+
+    }
+
+
+    async findUserByEmail(email: string): Promise<UserDocument> {
+        const user = await this.userRepository.findByEmail(email);
+
+        if (!user)
+            throw new NotFoundException(ErrorMessages.USER_NOT_FOUND)
+
+        return user
     }
 }
