@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, Logger } from "@nestjs/common";
+import { BadRequestException, Injectable, InternalServerErrorException, Logger } from "@nestjs/common";
 import { UserRepository } from "./repository/abstract/user.repository";
 import { UserRole } from "../../schemas";
 import { MongoServerError } from "mongodb";
@@ -15,6 +15,11 @@ export class UserService {
             return { msg: "User Created successfully" }
         } catch (err) {
             if (err instanceof MongoServerError) {
+                if (err.code === "1100") {
+
+                    throw new BadRequestException("'")
+                }
+                // other implementing
                 //TODO: Handling 11000 Code for UniqueConstraint Exception for User Email
             }
             this.logger.error(err)
