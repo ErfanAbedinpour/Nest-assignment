@@ -19,7 +19,7 @@ export class AuthService {
             return { msg: "User Registered successfully" }
 
         } catch (err) {
-            // if Error was returned is HttpException Instance Just throw it.
+            // if Error was returned From userService is HttpException Instance Just throw it. 
             if (err instanceof HttpException)
                 throw err
 
