@@ -4,10 +4,11 @@ import { RegisterUserDTO } from "./DTO/register-user.dto";
 import { HashingService } from "./hashing/hashing.abstract";
 import { LoginUserDTO } from "./DTO/login-user.dto";
 import { ErrorMessages } from "../../errorResponses/errorResponse.enum ";
+import { UserTokenService } from "./jwt-strategies/user-token.service";
 
 @Injectable()
 export class AuthService {
-    constructor(private readonly userService: UserService, private readonly argonHashing: HashingService) { }
+    constructor(private readonly userService: UserService, private readonly argonHashing: HashingService, private readonly userTokenService: UserTokenService) { }
 
     private readonly logger = new Logger(AuthService.name);
 
@@ -35,17 +36,16 @@ export class AuthService {
         try {
             const user = await this.userService.findUserByEmail(email);
 
-            const isPasswordMatch = await this.argonHashing.verify(password, user.password);
+            // verify User Password 
+            const isPasswordMatch = await this.argonHashing.verify(user.password, password);
 
             if (!isPasswordMatch)
                 throw new BadRequestException(ErrorMessages.USER_NOT_FOUND)
 
-            // TODO: Generate Token
+            // Generate User Jwt Token
+            const { accessToken, refreshToken } = await this.userTokenService.generateToken({ email: user.email, id: user.id, name: user.name, role: user.role });
 
-            const accessToken = ""
-            const refreshToken = ""
             return { accessToken, refreshToken };
-
         } catch (err) {
             if (err instanceof HttpException)
                 throw err;
