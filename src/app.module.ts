@@ -6,6 +6,10 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { UserSessionModule } from './modules/user-session/user-session.module';
+import { ProductModule } from './modules/product/product.module';
+import * as dotenv from 'dotenv'
+
+dotenv.config()
 
 @Module({
   imports: [
@@ -17,7 +21,8 @@ import { UserSessionModule } from './modules/user-session/user-session.module';
     }),
     AuthModule,
     UserModule,
-    UserSessionModule
+    UserSessionModule,
+    ProductModule
   ],
   controllers: [AppController],
 })
