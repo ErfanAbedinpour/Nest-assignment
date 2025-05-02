@@ -1,4 +1,4 @@
-import { BadRequestException, HttpException, Injectable, InternalServerErrorException, Logger } from "@nestjs/common";
+import { BadRequestException, HttpException, Injectable, InternalServerErrorException, Logger, NotFoundException } from "@nestjs/common";
 import { UserService } from "../user/user.service";
 import { RegisterUserDTO } from "./DTO/register-user.dto";
 import { HashingService } from "./hashing/hashing.abstract";
@@ -40,7 +40,7 @@ export class AuthService {
             const isPasswordMatch = await this.argonHashing.verify(user.password, password);
 
             if (!isPasswordMatch)
-                throw new BadRequestException(ErrorMessages.USER_NOT_FOUND)
+                throw new NotFoundException(ErrorMessages.USER_NOT_FOUND)
 
             // Generate User Jwt Token
             const { accessToken, refreshToken } = await this.userTokenService.generateToken({ email: user.email, id: user.id, name: user.name, role: user.role });
