@@ -19,19 +19,18 @@ export class ProductCreatedHandler {
   @OnEvent('product.created')
   async handle(event: ProductCreatedEvent) {
     try {
+
       const standardized = await this.productDescription.standardize(
         event.originalDescription,
       );
 
-      console.log('i am here')
-      console.log(await this.embeddingService.generateEmbedding("this is test"));
+      const vector = await this.embeddingService.generateEmbedding(standardized);
 
-      const result = await this.productModel.findOneAndUpdate(
-        new ObjectId(event.id),
-        { standardizedDescription: standardized },
-        { new: true },
+      await this.productModel.updateOne(
+        { _id: new ObjectId(event.id) },
+        { standardizedDescription: standardized, vector }
       );
-      return result;
+
     } catch (err) {
       this.logger.error(err);
       throw new InternalServerErrorException();

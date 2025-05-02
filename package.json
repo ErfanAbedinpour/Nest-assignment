@@ -1,7 +1,6 @@
 {
   "name": "nestjs-assignment",
   "version": "0.0.1",
-  "description": "",
   "author": "",
   "private": true,
   "license": "UNLICENSED",
@@ -29,6 +28,7 @@
     "@nestjs/mongoose": "^11.0.3",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/swagger": "^11.1.6",
+    "@xenova/transformers": "^2.17.2",
     "argon2": "^0.43.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
@@ -89,5 +89,11 @@
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
   },
-  "packageManager": "pnpm@10.10.0+sha512.d615db246fe70f25dcfea6d8d73dee782ce23e2245e3c4f6f888249fb568149318637dca73c2c5c8ef2a4ca0d5657fb9567188bfab47f566d1ee6ce987815c39"
+  "types": "module",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "keywords": [],
+  "description": ""
 }

@@ -1,18 +1,30 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { EmbeddingService } from "./abstract/embedding.service";
-import OpenAI from "openai";
+import { pipeline } from "@xenova/transformers";
 
 @Injectable()
 export class OpenApiEmbeddingService implements EmbeddingService {
-
-    private openai: OpenAI;
     private logger = new Logger(OpenApiEmbeddingService.name);
 
-    constructor() {
-        this.openai = new OpenAI({ apiKey: process.env.OPEN_API_KEY });
+    private embedder: any;
+
+    async onModuleInit() {
+        this.logger.log('Loading embedding model...');
+
+        this.embedder = await pipeline(
+            'feature-extraction',
+            'Xenova/nomic-embed-text-v1'
+        );
+        this.logger.log('Embedding model loaded.');
     }
 
     async generateEmbedding(text: string): Promise<number[]> {
-        return []
+
+        if (!this.embedder) {
+            throw new Error('Embedder not loaded yet');
+        }
+
+        const results = await this.embedder(text, { pooling: 'mean', normalize: true });
+        return Array.from(results.data);
     }
 }
