@@ -27,4 +27,12 @@ export class OpenApiEmbeddingService implements EmbeddingService {
         const results = await this.embedder(text, { pooling: 'mean', normalize: true });
         return Array.from(results.data);
     }
+
+
+    cosineSimilarity(firstVector: number[], secondVector: number[]): number {
+        const dot = firstVector.reduce((sum, ai, i) => sum + ai * secondVector[i], 0);
+        const magA = Math.sqrt(firstVector.reduce((sum, ai) => sum + ai * ai, 0));
+        const magB = Math.sqrt(secondVector.reduce((sum, bi) => sum + bi * bi, 0));
+        return dot / (magA * magB);
+    }
 }
