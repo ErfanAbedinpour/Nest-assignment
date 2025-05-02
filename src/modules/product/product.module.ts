@@ -5,6 +5,8 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { Product, ProductSchema } from "../../schemas";
 import { ProductRepository } from "./repository/abstract/product.repository";
 import { MongoProductRepository } from "./repository/abstract/mongo-product-repository.impl";
+import { DescriptionService } from "./ai/abstract-description.service";
+import { OpenApiDescriptionService } from "./ai/openAi-description.service";
 
 @Module({
     imports: [MongooseModule.forFeature([{ name: Product.name, schema: ProductSchema }])],
@@ -14,6 +16,10 @@ import { MongoProductRepository } from "./repository/abstract/mongo-product-repo
         {
             provide: ProductRepository,
             useClass: MongoProductRepository
+        },
+        {
+            provide: DescriptionService,
+            useClass: OpenApiDescriptionService
         }
     ],
     exports: [ProductService]
