@@ -105,7 +105,7 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 - [x] Fix TokenId Generated
 - [x] CRUD Product 
 - [ ] Write Test  product
-- [ ] Service For OpenApi For standardize Product Description And Store Both of them into Database
+- [x] Service For OpenApi For standardize Product Description And Store Both of them into Database
 - [ ] Serialize Product Information And User OpenApi Embedding Model For Creating Vector And Store them to Database
 - [ ] Write Route for get productId and return them and use The Product Vector for find similar Product And Ranking Them By One algorithem Based on similarity
 - [ ] Get Search Parameter (Limit,SimilarityValue)
