@@ -23,7 +23,11 @@ export class OpenApiDescriptionService implements DescriptionService {
                     content: `You are a product description expert. Standardize the following product description:
                     - Fix grammar and spelling
                     - Unify the structure (e.g., intro, features, benefits)
-                    - Optimize for search (SEO-friendly)`
+                    - Optimize for search (SEO-friendly)
+                    - Is optimized for semantic search 
+                    - Avoids bullet points or lists
+                    - Sounds professional and natural
+                    `
                 },
                 {
                     role: 'user',

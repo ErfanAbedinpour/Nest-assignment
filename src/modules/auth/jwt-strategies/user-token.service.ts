@@ -28,7 +28,7 @@ export class UserTokenService {
 
     async signRefreshToken(userId: string): Promise<string> {
         const tokenId = new Types.ObjectId().toString()
-        const refreshToken = await this.jwtService.signAsync({ userId, tokenId: tokenId }, { secret: process.env.ACCESS_TOKEN_SECRET, expiresIn: process.env.ACCESS_TOKEN_EXPIRE + "min" })
+        const refreshToken = await this.jwtService.signAsync({ userId, tokenId: tokenId }, { secret: process.env.REFRESH_TOKEN_SECRET, expiresIn: process.env.REFRESH_TOKEN_EXPIRE + "day" })
 
         await this.userSessionRepo.create(refreshToken, userId, tokenId);
         return refreshToken

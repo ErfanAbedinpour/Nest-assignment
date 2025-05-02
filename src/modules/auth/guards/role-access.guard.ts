@@ -19,14 +19,17 @@ export class RoleAccessGuard implements CanActivate {
       ctx.getHandler(),
     ]) || [undefined];
 
-    if (!roleMeta) return true;
 
     const req = ctx.switchToHttp().getRequest<Request>();
 
+    console.log('role Mta is ', roleMeta)
+
     for (const meta of roleMeta) {
       if (!meta) continue;
-      else if (meta !== req.user.role)
+      else if (meta !== req.user.role) {
+        console.log('meta is ', meta, 'use role ', req.user.role, 'equality', req.user.role === meta)
         throw new ForbiddenException(ErrorMessages.INVALID_ACCESS);
+      }
     }
 
     try {

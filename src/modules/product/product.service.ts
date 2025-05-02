@@ -1,24 +1,27 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ProductRepository } from './repository/abstract/product.repository';
 import { CreateProductDto } from './DTO/create-product.dto';
-import Decimal from 'decimal.js';
 import { ProductDocument } from '../../schemas';
 import { ErrorMessages } from '../../errorResponses/errorResponse.enum ';
 import { UpdateProductDto } from './DTO/update-product.dto';
-import { ProductPersist } from './repository/abstract/persistance/product.persist';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { ProductCreatedEvent } from './events/create-product.event';
 
 @Injectable()
 export class ProductService {
-    constructor(private readonly repository: ProductRepository) { }
+    constructor(private readonly repository: ProductRepository, private readonly eventEmitter: EventEmitter2) { }
 
     async create(dto: CreateProductDto) {
-        console.log('price is ', dto.price)
-        return this.repository.create({
+        const result = await this.repository.create({
             category: dto.category,
             name: dto.name,
             originalDescription: dto.description,
             price: dto.price
         });
+
+        this.eventEmitter.emit('product.created', new ProductCreatedEvent(result.id, result.originalDescription));
+
+        return result
     }
 
     async findAll(limit: number = 10, page: number = 1): Promise<ProductDocument[]> {

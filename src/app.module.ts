@@ -8,6 +8,7 @@ import { UserModule } from './modules/user/user.module';
 import { UserSessionModule } from './modules/user-session/user-session.module';
 import { ProductModule } from './modules/product/product.module';
 import * as dotenv from 'dotenv'
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 dotenv.config()
 
@@ -19,6 +20,7 @@ dotenv.config()
       isGlobal: true,
       cache: true
     }),
+    EventEmitterModule.forRoot({ global: true }),
     AuthModule,
     UserModule,
     UserSessionModule,

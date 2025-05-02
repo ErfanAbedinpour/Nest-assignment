@@ -7,6 +7,7 @@ import { ProductRepository } from "./repository/abstract/product.repository";
 import { MongoProductRepository } from "./repository/abstract/mongo-product-repository.impl";
 import { DescriptionService } from "./ai/abstract-description.service";
 import { OpenApiDescriptionService } from "./ai/openAi-description.service";
+import { ProductCreatedHandler } from "./events/handlers/product-created.handler";
 
 @Module({
     imports: [MongooseModule.forFeature([{ name: Product.name, schema: ProductSchema }])],
@@ -20,7 +21,8 @@ import { OpenApiDescriptionService } from "./ai/openAi-description.service";
         {
             provide: DescriptionService,
             useClass: OpenApiDescriptionService
-        }
+        },
+        ProductCreatedHandler
     ],
     exports: [ProductService]
 })
