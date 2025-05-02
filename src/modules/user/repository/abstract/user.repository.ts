@@ -11,6 +11,7 @@ export abstract class UserRepository {
 
     abstract delete(id: string): Promise<boolean>
 
-
     abstract update(id: string, data: Partial<UserPersist>): Promise<UserDocument>
+
+    abstract getDocumentLength(): Promise<number>
 }

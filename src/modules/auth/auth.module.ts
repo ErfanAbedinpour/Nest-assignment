@@ -6,6 +6,10 @@ import { ArgonHashingService } from "./hashing/argon/argon-hashing.service";
 import { AuthService } from "./auth.service";
 import { JwtModule } from "@nestjs/jwt";
 import { UserTokenService } from "./jwt-strategies/user-token.service";
+import { APP_GUARD } from "@nestjs/core";
+import { RoleAccessGuard } from "./guards/role-access.guard";
+import { AuthorizationGuard } from "./guards/authorization.guard";
+import { JwtVerificationGuard } from "./guards/jwt-verification.guard";
 
 @Module({
     controllers: [AuthController],
@@ -16,7 +20,17 @@ import { UserTokenService } from "./jwt-strategies/user-token.service";
             useClass: ArgonHashingService
         },
         AuthService,
-        UserTokenService
+        UserTokenService,
+        JwtVerificationGuard,
+        {
+            provide: APP_GUARD,
+            useClass: AuthorizationGuard
+
+        },
+        {
+            provide: APP_GUARD,
+            useClass: RoleAccessGuard
+        }
     ],
 })
 export class AuthModule { }

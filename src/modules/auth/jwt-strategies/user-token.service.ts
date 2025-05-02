@@ -4,6 +4,7 @@ import { UserDTO } from "../DTO/user.dto";
 import { UserSessionRepository } from "../../user-session/repository/abstract/user-session.abstract";
 import { ObjectId } from 'mongodb'
 import { AccessTokenPayload, RefreshTokenPayload } from "./token.types";
+import { Types } from "mongoose";
 
 @Injectable()
 export class UserTokenService {
@@ -26,7 +27,7 @@ export class UserTokenService {
     }
 
     async signRefreshToken(userId: string): Promise<string> {
-        const tokenId = ObjectId.generate().toString()
+        const tokenId = new Types.ObjectId().toString()
         const refreshToken = await this.jwtService.signAsync({ userId, tokenId: tokenId }, { secret: process.env.ACCESS_TOKEN_SECRET, expiresIn: process.env.ACCESS_TOKEN_EXPIRE + "min" })
 
         await this.userSessionRepo.create(refreshToken, userId, tokenId);

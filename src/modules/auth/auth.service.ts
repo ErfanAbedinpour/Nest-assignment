@@ -8,6 +8,7 @@ import { UserTokenService } from "./jwt-strategies/user-token.service";
 import { GenerateTokenDTO } from "./DTO/generate-token.DTO";
 import { JsonWebTokenError } from "@nestjs/jwt";
 import { ObjectId } from 'mongodb'
+import { UserRole } from "../../schemas";
 
 @Injectable()
 export class AuthService {
@@ -20,7 +21,8 @@ export class AuthService {
             // hashPassword
             const hashedPass = await this.argonHashing.hash(user.password);
 
-            await this.userService.createUser(user.name, user.email, hashedPass);
+            const userLength = await this.userService.getUsersLength();
+            await this.userService.createUser(user.name, user.email, hashedPass, userLength < 1 ? UserRole.ADMIN : UserRole.USER);
 
             return { msg: "User Registered successfully" }
 
