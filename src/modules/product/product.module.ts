@@ -6,8 +6,8 @@ import { Product, ProductSchema } from '../../schemas';
 import { ProductRepository } from './repository/abstract/product.repository';
 import { MongoProductRepository } from './repository/abstract/mongo-product-repository.impl';
 import { DescriptionService } from './ai/abstract-description.service';
-import { OpenApiDescriptionService } from './ai/openAi-description.service';
 import { ProductCreatedHandler } from './events/handlers/product-created.handler';
+import { OpenRouterDescriptionService } from './ai/openAi-description.service';
 
 @Module({
   imports: [
@@ -22,7 +22,7 @@ import { ProductCreatedHandler } from './events/handlers/product-created.handler
     },
     {
       provide: DescriptionService,
-      useClass: OpenApiDescriptionService,
+      useClass: OpenRouterDescriptionService,
     },
     ProductCreatedHandler,
   ],

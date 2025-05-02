@@ -2,10 +2,10 @@ import { InternalServerErrorException, Logger } from '@nestjs/common';
 import { DescriptionService } from './abstract-description.service';
 import { OpenAI } from 'openai';
 
-export class OpenApiDescriptionService implements DescriptionService {
+export class OpenRouterDescriptionService implements DescriptionService {
   private openai: OpenAI;
 
-  private logger = new Logger(OpenApiDescriptionService.name);
+  private logger = new Logger(OpenRouterDescriptionService.name);
 
   constructor() {
     this.openai = new OpenAI({
