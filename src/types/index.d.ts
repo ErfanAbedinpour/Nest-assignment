@@ -14,10 +14,11 @@ export interface IEnv {
   NODE_ENV: 'development' | 'production';
   ARGON_SECRET: string;
   OPEN_ROUTER_API_KEY: string;
+  OPEN_API_KEY: string
 }
 
 declare global {
   namespace NodeJS {
-    interface ProcessEnv extends IEnv {}
+    interface ProcessEnv extends IEnv { }
   }
 }
