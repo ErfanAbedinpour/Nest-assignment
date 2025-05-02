@@ -1,5 +1,5 @@
 import { InternalServerErrorException, Logger } from '@nestjs/common';
-import { DescriptionService } from './abstract-description.service';
+import { DescriptionService } from './abstract/description.service';
 import { OpenAI } from 'openai';
 
 export class OpenRouterDescriptionService implements DescriptionService {
