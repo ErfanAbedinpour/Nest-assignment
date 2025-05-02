@@ -15,15 +15,15 @@ export class MongoProductRepository implements ProductRepository {
     }
 
     async findAll(limit = 10, page = 1): Promise<ProductDocument[]> {
-        return this.model.find().skip((page - 1) * limit).limit(limit);
+        return this.model.find().skip((page - 1) * limit).limit(limit).select('-vector -__v').exec();
     }
 
     async findById(id: string): Promise<ProductDocument | null> {
-        return this.model.findById(new ObjectId(id)).exec();
+        return this.model.findById(new ObjectId(id)).select('-vector -__v').exec();
     }
 
     async update(id: string, data: Partial<ProductPersist>): Promise<ProductDocument | null> {
-        return this.model.findByIdAndUpdate(new ObjectId(id), data, { new: true }).exec();
+        return this.model.findByIdAndUpdate(new ObjectId(id), data, { new: true }).select('-vector -__v').exec();
     }
 
     async delete(id: string): Promise<ProductDocument | null> {

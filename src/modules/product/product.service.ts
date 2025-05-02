@@ -6,22 +6,27 @@ import { ErrorMessages } from '../../errorResponses/errorResponse.enum ';
 import { UpdateProductDto } from './DTO/update-product.dto';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ProductCreatedEvent } from './events/create-product.event';
+import { omit } from 'lodash';
 
 @Injectable()
 export class ProductService {
     constructor(private readonly repository: ProductRepository, private readonly eventEmitter: EventEmitter2) { }
 
     async create(dto: CreateProductDto) {
-        const result = await this.repository.create({
+
+        const result = (await this.repository.create({
             category: dto.category,
             name: dto.name,
             originalDescription: dto.description,
             price: dto.price
-        });
+        })).toObject();
 
+        // Remove vector and __v FROM Result (Not Perfect Approach!!)
+        const cleanResult = omit(result, ["vector", "__v"])
+        // use EventEmitter For Decouple Services. This Standardize The Description And Store Them in DB 
         this.eventEmitter.emit('product.created', new ProductCreatedEvent(result.id, result.originalDescription));
 
-        return result
+        return cleanResult
     }
 
     async findAll(limit: number = 10, page: number = 1): Promise<ProductDocument[]> {
