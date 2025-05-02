@@ -11,7 +11,8 @@ export interface IEnv {
     ACCESS_TOKEN_EXPIRE: string;
     REFRESH_TOKEN_SECRET: string;
     REFRESH_TOKEN_EXPIRE: string;
-    NODE_ENV: "development" | "production"
+    NODE_ENV: "development" | "production",
+    ARGON_SECRET: string
 }
 
 declare global {
