@@ -1,5 +1,11 @@
 FROM node:23-slim AS base
 
+RUN apt-get update && apt-get install -y \
+  build-essential \
+  python3 \
+  libvips-dev \
+  && rm -rf /var/lib/apt/lists/*
+
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
