@@ -17,7 +17,7 @@ services:
       - public-data:/app/public
     networks:
       - app
-    command: ['pnpm', 'run', 'start:dev']
+    command: ['npm', 'run', 'start:dev']
 
   mongo_db:
     image: mongo 

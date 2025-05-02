@@ -5,9 +5,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Product, ProductSchema } from '../../schemas';
 import { ProductRepository } from './repository/abstract/product.repository';
 import { MongoProductRepository } from './repository/abstract/mongo-product-repository.impl';
-import { DescriptionService } from './ai/abstract-description.service';
-import { OpenApiDescriptionService } from './ai/openAi-description.service';
+import { DescriptionService } from './ai/abstract/description.service';
 import { ProductCreatedHandler } from './events/handlers/product-created.handler';
+import { OpenRouterDescriptionService } from './ai/openRouter-description.service.impl';
+import { EmbeddingService } from './ai/abstract/embedding.service';
+import { OpenApiEmbeddingService } from './ai/openApi-embedding.service.impl';
 
 @Module({
   imports: [
@@ -16,16 +18,20 @@ import { ProductCreatedHandler } from './events/handlers/product-created.handler
   controllers: [ProductController],
   providers: [
     ProductService,
+    ProductCreatedHandler,
     {
       provide: ProductRepository,
       useClass: MongoProductRepository,
     },
     {
       provide: DescriptionService,
-      useClass: OpenApiDescriptionService,
+      useClass: OpenRouterDescriptionService,
     },
-    ProductCreatedHandler,
+    {
+      provide: EmbeddingService,
+      useClass: OpenApiEmbeddingService
+    }
   ],
   exports: [ProductService],
 })
-export class ProductModule {}
+export class ProductModule { }
