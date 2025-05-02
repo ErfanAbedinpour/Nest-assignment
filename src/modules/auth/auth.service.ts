@@ -5,6 +5,9 @@ import { HashingService } from "./hashing/hashing.abstract";
 import { LoginUserDTO } from "./DTO/login-user.dto";
 import { ErrorMessages } from "../../errorResponses/errorResponse.enum ";
 import { UserTokenService } from "./jwt-strategies/user-token.service";
+import { GenerateTokenDTO } from "./DTO/generate-token.DTO";
+import { JsonWebTokenError } from "@nestjs/jwt";
+import { ObjectId } from 'mongodb'
 
 @Injectable()
 export class AuthService {
@@ -50,6 +53,45 @@ export class AuthService {
             if (err instanceof HttpException)
                 throw err;
 
+            this.logger.error(err)
+            throw new InternalServerErrorException()
+        }
+
+    }
+
+
+    async generateToken(genToken: GenerateTokenDTO) {
+
+        try {
+            /**
+             * 
+             * 1. Verify RefreshToken
+             * 2. Check Token is valid Or Not
+             * 3. Invalidate Old RefreshToken
+             * 4. FindUserById
+             * 5. GenerateNewTokens
+             */
+            const tokenPayload = await this.userTokenService.verifyRefreshToken(genToken.refreshToken);
+
+            const isValid = await this.userTokenService.isValidate(tokenPayload.tokenId, genToken.refreshToken);
+
+            if (!isValid)
+                throw new BadRequestException(ErrorMessages.INVALID_REFRESH_TOKEN);
+
+            await this.userTokenService.invalidate(tokenPayload.tokenId);
+
+            const user = await this.userService.findUserById(new ObjectId(tokenPayload.userId));
+
+            if (!user) throw new BadRequestException(ErrorMessages.USER_NOT_FOUND);
+
+            return this.userTokenService.generateToken({ email: user.email, id: user.id, name: user.name, role: user.role });
+
+        } catch (err) {
+            if (err instanceof HttpException)
+                throw err;
+
+            if (err instanceof JsonWebTokenError)
+                throw new BadRequestException(ErrorMessages.INVALID_REFRESH_TOKEN)
             this.logger.error(err)
             throw new InternalServerErrorException()
         }
