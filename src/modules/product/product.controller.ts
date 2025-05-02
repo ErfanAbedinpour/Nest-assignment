@@ -6,6 +6,7 @@ import {
   Param,
   Delete,
   Put,
+  Query,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './DTO/create-product.dto';
@@ -20,6 +21,7 @@ import {
   ApiOkResponse,
 } from '@nestjs/swagger';
 import { ProductDTO } from './DTO/product.dto';
+import { GetSimilarProductQueryDTO } from './DTO/get-similar-product.dto';
 
 @Controller('products')
 export class ProductController {
@@ -80,5 +82,15 @@ export class ProductController {
   })
   remove(@Param('id') id: string) {
     return this.productService.remove(id);
+  }
+
+  @Get(':id/similar')
+  @ApiOkResponse({
+    description: 'Product fetched successfully',
+    type: [ProductDTO],
+  })
+  @ApiNotFoundResponse({ description: 'Product not found' })
+  findSimilar(@Query() findSimilarProductQuery: GetSimilarProductQueryDTO) {
+    return this.productService.findSimilarProduct(findSimilarProductQuery);
   }
 }

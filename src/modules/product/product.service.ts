@@ -7,6 +7,7 @@ import { UpdateProductDto } from './DTO/update-product.dto';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ProductCreatedEvent } from './events/create-product.event';
 import { omit } from 'lodash';
+import { GetSimilarProductQueryDTO } from './DTO/get-similar-product.dto';
 
 @Injectable()
 export class ProductService {
@@ -65,4 +66,6 @@ export class ProductService {
     if (!product) throw new NotFoundException(ErrorMessages.PRODUCT_NOT_FOUND);
     return product;
   }
+
+  findSimilarProduct(dto: GetSimilarProductQueryDTO) {}
 }
