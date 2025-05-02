@@ -12,22 +12,28 @@ import { ErrorMessages } from '../../../errorResponses/errorResponse.enum ';
 
 @Injectable()
 export class RoleAccessGuard implements CanActivate {
-  constructor(private readonly reflector: Reflector) { }
+  constructor(private readonly reflector: Reflector) {}
   async canActivate(ctx: ExecutionContext) {
     const roleMeta = this.reflector.getAll<UserRole[]>(ROLE_ACCESS, [
       ctx.getClass(),
       ctx.getHandler(),
     ]) || [undefined];
 
-
     const req = ctx.switchToHttp().getRequest<Request>();
 
-    console.log('role Mta is ', roleMeta)
+    console.log('role Mta is ', roleMeta);
 
     for (const meta of roleMeta) {
       if (!meta) continue;
       else if (meta !== req.user.role) {
-        console.log('meta is ', meta, 'use role ', req.user.role, 'equality', req.user.role === meta)
+        console.log(
+          'meta is ',
+          meta,
+          'use role ',
+          req.user.role,
+          'equality',
+          req.user.role === meta,
+        );
         throw new ForbiddenException(ErrorMessages.INVALID_ACCESS);
       }
     }

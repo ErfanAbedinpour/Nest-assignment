@@ -27,7 +27,7 @@ describe('JWT Verification Guard', () => {
     guard = moduleRef.get(RoleAccessGuard);
   });
 
-  // Make Mock ExecutionContext 
+  // Make Mock ExecutionContext
   const mockCtx = {
     getHandler: jest.fn(),
     getClass: jest.fn(),

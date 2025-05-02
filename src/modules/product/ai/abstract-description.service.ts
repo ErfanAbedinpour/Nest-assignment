@@ -1,3 +1,3 @@
 export abstract class DescriptionService {
-    abstract standardize(raw: string): Promise<string>
+  abstract standardize(raw: string): Promise<string>;
 }

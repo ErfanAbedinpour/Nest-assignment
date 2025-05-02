@@ -40,7 +40,9 @@ describe('JWT Verification Guard', () => {
     } as unknown as ExecutionContext;
 
     expect(guard.canActivate(ctx)).rejects.toThrow(ForbiddenException);
-    expect(guard.canActivate(ctx)).rejects.toThrow(ErrorMessages.INVALID_HEADER);
+    expect(guard.canActivate(ctx)).rejects.toThrow(
+      ErrorMessages.INVALID_HEADER,
+    );
   });
 
   it('Should be throw UnAuthorized because token is invalid', () => {
@@ -72,13 +74,11 @@ describe('JWT Verification Guard', () => {
       }),
     } as unknown as ExecutionContext;
 
-    jest
-      .spyOn(mockJwtService, 'verifyAsync')
-      .mockResolvedValueOnce({
-        name: 'test-name',
-        role: 'test-role',
-        userId: 1,
-      });
+    jest.spyOn(mockJwtService, 'verifyAsync').mockResolvedValueOnce({
+      name: 'test-name',
+      role: 'test-role',
+      userId: 1,
+    });
 
     const res = await guard.canActivate(ctx);
     expect(res).toEqual(true);

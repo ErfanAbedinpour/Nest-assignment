@@ -43,10 +43,11 @@ async function bootstrap() {
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
 
-  const PORT = process.env.PORT ?? 8000
+  const PORT = process.env.PORT ?? 8000;
   await app.listen(PORT, () => {
-    console.log(`server listening on port ${PORT} \n OpenApi http://localhost:${PORT}/api`)
+    console.log(
+      `server listening on port ${PORT} \n OpenApi http://localhost:${PORT}/api`,
+    );
   });
-
 }
 bootstrap();

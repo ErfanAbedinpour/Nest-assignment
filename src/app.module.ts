@@ -7,10 +7,10 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { UserSessionModule } from './modules/user-session/user-session.module';
 import { ProductModule } from './modules/product/product.module';
-import * as dotenv from 'dotenv'
+import * as dotenv from 'dotenv';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 
-dotenv.config()
+dotenv.config();
 
 @Module({
   imports: [
@@ -18,14 +18,14 @@ dotenv.config()
     ConfigModule.forRoot({
       envFilePath: `${process.cwd()}/.env`,
       isGlobal: true,
-      cache: true
+      cache: true,
     }),
     EventEmitterModule.forRoot({ global: true }),
     AuthModule,
     UserModule,
     UserSessionModule,
-    ProductModule
+    ProductModule,
   ],
   controllers: [AppController],
 })
-export class AppModule { }
+export class AppModule {}
