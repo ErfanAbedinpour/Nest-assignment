@@ -99,9 +99,9 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 
 ## TODO:
-- [ ] Write Role-Access-Control Guard
-- [ ] Authorization Guard
-- [ ] Write Test  For Guards
+- [x] Write Role-Access-Control Guard
+- [x] Authorization Guard
+- [x] Write Test  For Guards
 - [ ] CRUD Product 
 - [ ] Write Test  product
 - [ ] Service For OpenApi For standardize Product Description And Store Both of them into Database

@@ -6,11 +6,15 @@ import { UserService } from "../../user/user.service"
 import { RegisterUserDTO } from "../DTO/register-user.dto"
 import { NotFoundException } from "@nestjs/common"
 import { ErrorMessages } from "../../../errorResponses/errorResponse.enum "
+import { UserTokenService } from "../jwt-strategies/user-token.service"
 
 describe("AuthService", function () {
 
     let service: AuthService
     let hashService: HashingService
+
+    let mockTokenService = {} as UserTokenService;
+
     let userServiceMock = {
         createUser: jest.fn()
     }
@@ -26,6 +30,10 @@ describe("AuthService", function () {
                 {
                     provide: UserService,
                     useValue: userServiceMock
+                },
+                {
+                    provide: UserTokenService,
+                    useValue: mockTokenService
                 }
             ]
 
