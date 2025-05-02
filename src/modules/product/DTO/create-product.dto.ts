@@ -1,5 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { IsString, IsNumber, IsOptional, IsArray, IsNumberString, IsNotEmpty } from 'class-validator';
+import Decimal from 'decimal.js';
 
 export class CreateProductDto {
     @ApiProperty({ description: "Name of Product", example: "Mouse" })
@@ -7,9 +9,10 @@ export class CreateProductDto {
     @IsString()
     name: string;
 
-    @ApiProperty({ description: "NumberString For Product Price", example: "120000" })
+    @ApiProperty({ description: "NumberString For Product Price", example: "120000", type: 'string' })
     @IsNumberString()
-    price: number;
+    @Type(() => Decimal)
+    price: Decimal;
 
     @ApiProperty({ description: "The Category of Product", example: "computer-utils" })
     @IsString()
