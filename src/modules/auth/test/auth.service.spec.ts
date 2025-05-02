@@ -26,7 +26,8 @@ describe("AuthService", function () {
     let userServiceMock = {
         createUser: jest.fn(),
         findUserByEmail: jest.fn(),
-        findUserById: jest.fn()
+        findUserById: jest.fn(),
+        getUsersLength: jest.fn()
     }
 
     beforeEach(async () => {
@@ -71,15 +72,16 @@ describe("AuthService", function () {
             name: "test-name",
             password: "test-password"
         } as RegisterUserDTO
-        it("Should be registered successful", async () => {
+
+        it("Should be registered successful With Admin Role", async () => {
             jest.spyOn(hashService, 'hash').mockResolvedValue("fake-hash");
             jest.spyOn(userServiceMock, 'createUser').mockResolvedValue(null);
-
+            jest.spyOn(userServiceMock, 'getUsersLength').mockResolvedValue(0)
 
             const res = await service.registerUser(payload)
             expect(res).toEqual({ msg: "User Registered successfully" })
             expect(hashService.hash).toHaveBeenCalledWith(payload.password);
-            expect(userServiceMock.createUser).toHaveBeenCalledWith(payload.name, payload.email, 'fake-hash')
+            expect(userServiceMock.createUser).toHaveBeenCalledWith(payload.name, payload.email, 'fake-hash', UserRole.ADMIN)
         })
 
 

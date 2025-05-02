@@ -3,7 +3,6 @@ import { UserRepository } from "./repository/abstract/user.repository";
 import { UserDocument, UserRole } from "../../schemas";
 import { MongoServerError, ObjectId } from "mongodb";
 import { ErrorMessages } from "../../errorResponses/errorResponse.enum ";
-import { RepositoryException } from "../../exception/respository.exception";
 
 @Injectable()
 export class UserService {
@@ -47,5 +46,9 @@ export class UserService {
             throw new NotFoundException(ErrorMessages.USER_NOT_FOUND)
 
         return user
+    }
+
+    getUsersLength() {
+        return this.userRepository.getDocumentLength();
     }
 }

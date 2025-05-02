@@ -102,8 +102,8 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 - [x] Write Role-Access-Control Guard
 - [x] Authorization Guard
 - [x] Write Test  For Guards
-- [ ] Fix TokenId Generated
-- [ ] CRUD Product 
+- [x] Fix TokenId Generated
+- [x] CRUD Product 
 - [ ] Write Test  product
 - [ ] Service For OpenApi For standardize Product Description And Store Both of them into Database
 - [ ] Serialize Product Information And User OpenApi Embedding Model For Creating Vector And Store them to Database

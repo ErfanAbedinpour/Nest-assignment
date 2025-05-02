@@ -64,4 +64,8 @@ export class MongoUserRepository implements UserRepository {
         return this.userModel.findOne({ email });
 
     }
+
+    getDocumentLength(): Promise<number> {
+        return this.userModel.countDocuments()
+    }
 }
