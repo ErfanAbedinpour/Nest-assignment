@@ -1,12 +1,11 @@
-import { UserRole } from "../../../../schemas"
+import { UserRole } from '../../../../schemas';
 
 export class UserPersist {
+  name: string;
 
-    name: string
+  email: string;
 
-    email: string
+  password: string;
 
-    password: string
-
-    role?: UserRole
+  role?: UserRole;
 }

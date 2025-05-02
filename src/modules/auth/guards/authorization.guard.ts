@@ -8,7 +8,7 @@ export class AuthorizationGuard implements CanActivate {
   constructor(
     private readonly jwtVerificationGuard: JwtVerificationGuard,
     private readonly reflector: Reflector,
-  ) { }
+  ) {}
 
   async canActivate(ctx: ExecutionContext): Promise<boolean> {
     const isAuthMeta = this.reflector.getAll<boolean[]>(AuthToken, [

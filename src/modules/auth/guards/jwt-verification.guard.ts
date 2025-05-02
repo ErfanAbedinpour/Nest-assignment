@@ -13,10 +13,10 @@ import { UserRole } from '../../../schemas';
 
 @Injectable()
 export class JwtVerificationGuard implements CanActivate {
-  constructor(private readonly jwtService: JwtService) { }
+  constructor(private readonly jwtService: JwtService) {}
 
   async canActivate(ctx: ExecutionContext): Promise<boolean> {
-    // getRequest 
+    // getRequest
     const req = ctx.switchToHttp().getRequest<Request>();
 
     // Check Header Schema
@@ -48,7 +48,7 @@ export class JwtVerificationGuard implements CanActivate {
   }
 }
 
-// Inject UserObject in Request Context In Express 
+// Inject UserObject in Request Context In Express
 declare global {
   namespace Express {
     interface Request {

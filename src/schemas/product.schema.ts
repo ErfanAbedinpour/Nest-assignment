@@ -5,22 +5,22 @@ export type ProductDocument = HydratedDocument<Product>;
 
 @Schema({ timestamps: true })
 export class Product extends Document {
-    @Prop({ required: true })
-    name: string;
+  @Prop({ required: true })
+  name: string;
 
-    @Prop({ required: true })
-    price: number;
+  @Prop({ required: true })
+  price: number;
 
-    @Prop()
-    category: string;
+  @Prop()
+  category: string;
 
-    @Prop()
-    originalDescription: string;
+  @Prop()
+  originalDescription: string;
 
-    @Prop()
-    standardizedDescription: string;
+  @Prop()
+  standardizedDescription: string;
 
-    @Prop({ type: [Number], default: [] })
-    vector?: number[];
+  @Prop({ type: [Number], default: [] })
+  vector?: number[];
 }
 export const ProductSchema = SchemaFactory.createForClass(Product);
