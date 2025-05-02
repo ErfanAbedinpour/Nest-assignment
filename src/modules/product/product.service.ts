@@ -13,7 +13,7 @@ export class ProductService {
   constructor(
     private readonly repository: ProductRepository,
     private readonly eventEmitter: EventEmitter2,
-  ) {}
+  ) { }
 
   async create(dto: CreateProductDto) {
     const result = (
@@ -30,7 +30,7 @@ export class ProductService {
     // use EventEmitter For Decouple Services. This Standardize The Description And Store Them in DB
     this.eventEmitter.emit(
       'product.created',
-      new ProductCreatedEvent(result.id, result.originalDescription),
+      new ProductCreatedEvent(String(result._id), result.originalDescription),
     );
 
     return cleanResult;
