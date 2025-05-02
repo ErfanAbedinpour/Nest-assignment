@@ -1,6 +1,6 @@
-import { HashingService } from "../../hashing/hashing.abstract";
+import { HashingService } from '../../hashing/hashing.abstract';
 
 export const hashServiceMock: HashingService = {
-    hash: jest.fn(),
-    verify: jest.fn()
-}
+  hash: jest.fn(),
+  verify: jest.fn(),
+};
