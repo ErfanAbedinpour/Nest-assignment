@@ -1,4 +1,9 @@
 import { Injectable } from "@nestjs/common";
 
 @Injectable()
-export class ProductService { }
+export class ProductService {
+
+    createProduct() { }
+
+    getAllProduct(limit: number = 10) { }
+}
