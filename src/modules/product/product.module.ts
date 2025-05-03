@@ -8,8 +8,8 @@ import { MongoProductRepository } from './repository/abstract/mongo-product-repo
 import { DescriptionService } from './ai/abstract/description.service';
 import { ProductCreatedHandler } from './events/handlers/product-created.handler';
 import { EmbeddingService } from './ai/abstract/embedding.service';
-import { TransformerDescriptionService } from './ai/description.service.impl';
-import { TransformerEmbeddingService } from './ai/embedding.service.impl';
+import { TransformerDescriptionService } from './ai/transformer-description.service.impl';
+import { TransformerEmbeddingService } from './ai/transformer-embedding.service.impl';
 
 @Module({
   imports: [

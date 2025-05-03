@@ -8,8 +8,7 @@ import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class MongoProductRepository implements ProductRepository, OnModuleInit {
-  constructor(@InjectModel(Product.name) private model: Model<Product>) {
-  }
+  constructor(@InjectModel(Product.name) private model: Model<Product>) {}
 
   /**
    * Create vector Search Index
@@ -17,26 +16,25 @@ export class MongoProductRepository implements ProductRepository, OnModuleInit {
   async onModuleInit() {
     /**
      *  Create Vector Search Index
-     * 
+     *
      */
     const index = {
-      name: "vector_idx",
-      type: "vectorSearch",
+      name: 'vector_idx',
+      type: 'vectorSearch',
       definition: {
-        "fields": [
+        fields: [
           {
-            "type": "vector",
-            "path": "vector",
-            "similarity": "cosine",
-            "numDimensions": 768
-          }
-        ]
-      }
-    }
+            type: 'vector',
+            path: 'vector',
+            similarity: 'cosine',
+            numDimensions: 768,
+          },
+        ],
+      },
+    };
 
-    await this.model.createSearchIndex(index)
+    await this.model.createSearchIndex(index);
   }
-
 
   async create(data: ProductPersist): Promise<ProductDocument> {
     return new this.model(data).save();
@@ -50,12 +48,12 @@ export class MongoProductRepository implements ProductRepository, OnModuleInit {
       .find()
       .skip((page - 1) * limit)
       .limit(limit)
-      .select("-__v")
+      .select('-__v')
       .exec();
   }
 
   async findById(id: string): Promise<ProductDocument | null> {
-    return this.model.findById(new ObjectId(id)).select("-__v").exec();
+    return this.model.findById(new ObjectId(id)).select('-__v').exec();
   }
 
   async update(
@@ -64,15 +62,19 @@ export class MongoProductRepository implements ProductRepository, OnModuleInit {
   ): Promise<ProductDocument | null> {
     return this.model
       .findByIdAndUpdate(new ObjectId(id), data, { new: true })
-      .select("-__v")
+      .select('-__v')
       .exec();
   }
 
   async delete(id: string): Promise<ProductDocument | null> {
-    return this.model.findByIdAndDelete(id).select("-__v").exec();
+    return this.model.findByIdAndDelete(id).select('-__v').exec();
   }
 
-  async similaritySearch(query: number[], limit: number, threshold: number): Promise<ProductDocument[]> {
+  async similaritySearch(
+    query: number[],
+    limit: number,
+    threshold: number,
+  ): Promise<ProductDocument[]> {
     const results = await this.model.aggregate([
       {
         $vectorSearch: {
@@ -83,11 +85,6 @@ export class MongoProductRepository implements ProductRepository, OnModuleInit {
           limit: limit,
         },
       },
-      // {
-      //   $match: {
-      //     score: { $gte: threshold },
-      //   },
-      // },
       {
         $project: {
           name: 1,
@@ -99,13 +96,17 @@ export class MongoProductRepository implements ProductRepository, OnModuleInit {
           score: {
             $meta: 'vectorSearchScore',
           },
-        }
-      }
-    ])
+        },
+      },
+      {
+        $match: {
+          score: { $gte: threshold },
+        },
+      },
+    ]);
 
     /**
      *      */
     return results;
   }
-
 }

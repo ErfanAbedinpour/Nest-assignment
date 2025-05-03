@@ -8,8 +8,8 @@ import { UserSessionModule } from './modules/user-session/user-session.module';
 import { ProductModule } from './modules/product/product.module';
 import * as dotenv from 'dotenv';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { TransformerDescriptionService } from './modules/product/ai/transformer-description.service.impl';
 dotenv.config();
-
 
 @Module({
   imports: [
@@ -27,4 +27,4 @@ dotenv.config();
   ],
   controllers: [AppController],
 })
-export class AppModule { }
+export class AppModule {}
