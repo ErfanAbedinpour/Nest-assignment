@@ -83,7 +83,6 @@ export class ProductService {
     if (!product.vector)
       throw new BadRequestException('For This Product Vector Not FOund.');
 
-    console.log('threshold is ', threshold);
     const results = await this.repository.similaritySearch(
       product.vector,
       limit,
