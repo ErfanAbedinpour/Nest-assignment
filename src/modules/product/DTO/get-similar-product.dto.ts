@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsMongoId, IsNotEmpty, IsNumber, Max, Min } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsMongoId, IsNotEmpty, IsNumber, IsNumberString, Max, Min } from 'class-validator';
 
 export class GetSimilarProductQueryDTO {
   @IsMongoId()
@@ -8,7 +9,7 @@ export class GetSimilarProductQueryDTO {
   id: string;
 
   @IsNotEmpty()
-  @IsNumber()
+  @Type(() => Number)
   @Min(0)
   @Max(1)
   @ApiProperty({ description: 'threshold must be between 0,1', example: '0.8' })

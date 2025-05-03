@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { ProductRepository } from './repository/abstract/product.repository';
 import { CreateProductDto } from './DTO/create-product.dto';
 import { ProductDocument } from '../../schemas';
@@ -8,12 +8,14 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ProductCreatedEvent } from './events/create-product.event';
 import { omit } from 'lodash';
 import { GetSimilarProductQueryDTO } from './DTO/get-similar-product.dto';
+import { EmbeddingService } from './ai/abstract/embedding.service';
 
 @Injectable()
 export class ProductService {
   constructor(
     private readonly repository: ProductRepository,
     private readonly eventEmitter: EventEmitter2,
+    private readonly embeddedService: EmbeddingService
   ) { }
 
   async create(dto: CreateProductDto) {
@@ -44,10 +46,10 @@ export class ProductService {
     return this.repository.findAll(limit, page);
   }
 
-  async findOne(id: string): Promise<ProductDocument> {
+  async findOne(id: string) {
     const product = await this.repository.findById(id);
     if (!product) throw new NotFoundException(ErrorMessages.PRODUCT_NOT_FOUND);
-    return product;
+    return omit(product, ["vector", "__v"]);
   }
 
   async update(id: string, dto: UpdateProductDto): Promise<ProductDocument> {
@@ -67,5 +69,19 @@ export class ProductService {
     return product;
   }
 
-  findSimilarProduct(dto: GetSimilarProductQueryDTO) {}
+  async findSimilarProduct({ id, threshold }: GetSimilarProductQueryDTO) {
+    const product = await this.repository.findById(id);
+
+    if (!product)
+      throw new NotFoundException(ErrorMessages.PRODUCT_NOT_FOUND)
+
+    if (!product.vector)
+      throw new BadRequestException("For This Product Vector Not FOund.")
+
+    const results = await this.repository.similaritySearch(product.vector, 10, 1)
+
+    return results
+
+  }
 }
+

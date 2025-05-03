@@ -17,8 +17,6 @@ import { OpenApiEmbeddingService } from './ai/openApi-embedding.service.impl';
   ],
   controllers: [ProductController],
   providers: [
-    ProductService,
-    ProductCreatedHandler,
     {
       provide: ProductRepository,
       useClass: MongoProductRepository,
@@ -30,7 +28,9 @@ import { OpenApiEmbeddingService } from './ai/openApi-embedding.service.impl';
     {
       provide: EmbeddingService,
       useClass: OpenApiEmbeddingService
-    }
+    },
+    ProductService,
+    ProductCreatedHandler,
   ],
   exports: [ProductService],
 })

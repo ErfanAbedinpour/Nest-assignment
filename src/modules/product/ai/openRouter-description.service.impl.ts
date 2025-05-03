@@ -1,44 +1,34 @@
-import { InternalServerErrorException, Logger } from '@nestjs/common';
+import { InternalServerErrorException, Logger, OnModuleInit } from '@nestjs/common';
 import { DescriptionService } from './abstract/description.service';
-import { OpenAI } from 'openai';
+import { pipeline, Text2TextGenerationOutput, Text2TextGenerationPipeline, Text2TextGenerationSingle } from '@xenova/transformers';
 
-export class OpenRouterDescriptionService implements DescriptionService {
-  private openai: OpenAI;
+export class OpenRouterDescriptionService implements DescriptionService, OnModuleInit {
 
+  private generator: Text2TextGenerationPipeline
   private logger = new Logger(OpenRouterDescriptionService.name);
 
-  constructor() {
-    this.openai = new OpenAI({
-      apiKey: process.env.OPEN_ROUTER_API_KEY,
-      baseURL: 'https://openrouter.ai/api/v1',
-    });
+  async onModuleInit() {
+    console.log('Starting Generating Text2Text Model')
+
+    this.generator = await pipeline(
+      'text2text-generation',
+      'Xenova/flan-t5-base'
+    );
+
+    console.log('Finish Generating Text2Text Model')
   }
 
   async standardize(rawDescription: string): Promise<string> {
     try {
-      const response = await this.openai.chat.completions.create({
-        model: 'gpt-3.5-turbo',
-        messages: [
-          {
-            role: 'system',
-            content: `You are a product description expert. Standardize the following product description:
-                    - Fix grammar and spelling
-                    - Unify the structure (e.g., intro, features, benefits)
-                    - Optimize for search (SEO-friendly)
-                    - Is optimized for semantic search 
-                    - Avoids bullet points or lists
-                    - Sounds professional and natural
-                    `,
-          },
-          {
-            role: 'user',
-            content: rawDescription,
-          },
-        ],
-      });
 
-      const text = response.choices[0].message.content;
-      return text || rawDescription;
+      const prompt = `Rewrite the following product description to sound professional, SEO-friendly, and natural. Fix grammar and spelling, and improve structure for semantic search. Do not use lists.\n\nDescription: "${rawDescription}"`;
+
+      const output = (await this.generator(prompt, {
+        max_new_tokens: 150,
+        temperature: 0.7,
+      })) as unknown as Text2TextGenerationSingle[]
+
+      return output[0].generated_text
     } catch (err) {
       this.logger.error(err);
       throw new InternalServerErrorException();

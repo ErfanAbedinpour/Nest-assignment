@@ -8,11 +8,16 @@ import { UserSessionModule } from './modules/user-session/user-session.module';
 import { ProductModule } from './modules/product/product.module';
 import * as dotenv from 'dotenv';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-
 dotenv.config();
 
+
+console.log(process.env.MONGO_URI)
 @Module({
   imports: [
+    AuthModule,
+    UserModule,
+    UserSessionModule,
+    ProductModule,
     MongooseModule.forRoot(process.env.MONGO_URI),
     ConfigModule.forRoot({
       envFilePath: `${process.cwd()}/.env`,
@@ -20,10 +25,6 @@ dotenv.config();
       cache: true,
     }),
     EventEmitterModule.forRoot({ global: true }),
-    AuthModule,
-    UserModule,
-    UserSessionModule,
-    ProductModule,
   ],
   controllers: [AppController],
 })
