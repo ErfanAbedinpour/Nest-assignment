@@ -2,20 +2,21 @@ import { InternalServerErrorException, Logger, OnModuleInit } from '@nestjs/comm
 import { DescriptionService } from './abstract/description.service';
 import { pipeline, Text2TextGenerationOutput, Text2TextGenerationPipeline, Text2TextGenerationSingle } from '@xenova/transformers';
 
-export class OpenRouterDescriptionService implements DescriptionService, OnModuleInit {
+export class TransformerDescriptionService implements DescriptionService, OnModuleInit {
 
   private generator: Text2TextGenerationPipeline
-  private logger = new Logger(OpenRouterDescriptionService.name);
+  private logger = new Logger(TransformerDescriptionService.name);
 
   async onModuleInit() {
-    console.log('Starting Generating Text2Text Model')
+
+    this.logger.log("Starting Embedding Model, please wait...")
 
     this.generator = await pipeline(
       'text2text-generation',
       'Xenova/flan-t5-base'
     );
 
-    console.log('Finish Generating Text2Text Model')
+    this.logger.log("Embedding Model Loaded")
   }
 
   async standardize(rawDescription: string): Promise<string> {
