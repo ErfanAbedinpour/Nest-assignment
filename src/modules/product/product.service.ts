@@ -44,13 +44,13 @@ export class ProductService {
     page: number = 1,
   ) {
     const results = await this.repository.findAll(limit, page)
-    return results.map(result => omit(result.toObject(), ["vector"]))
+    return results.map(r => omit(r.toObject(), ['vector']))
   }
 
   async findOne(id: string) {
     const product = await this.repository.findById(id);
     if (!product) throw new NotFoundException(ErrorMessages.PRODUCT_NOT_FOUND);
-    return omit(product.toObject(), ["vector", "__v"]);
+    return omit(product.toObject(), ["vector"]);
   }
 
   async update(id: string, dto: UpdateProductDto) {
@@ -61,13 +61,13 @@ export class ProductService {
       price: dto.price,
     });
     if (!product) throw new NotFoundException(ErrorMessages.PRODUCT_NOT_FOUND);
-    return omit(product.toObject(), ["__v", "vector"]);
+    return omit(product.toObject(), ["vector"]);
   }
 
   async remove(id: string) {
     const product = await this.repository.delete(id);
     if (!product) throw new NotFoundException(ErrorMessages.PRODUCT_NOT_FOUND);
-    return omit(product.toObject(), ["vector", "__v"]);
+    return omit(product.toObject(), ["vector"]);
 
   }
 

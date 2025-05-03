@@ -50,11 +50,12 @@ export class MongoProductRepository implements ProductRepository, OnModuleInit {
       .find()
       .skip((page - 1) * limit)
       .limit(limit)
+      .select("-__v")
       .exec();
   }
 
   async findById(id: string): Promise<ProductDocument | null> {
-    return this.model.findById(new ObjectId(id)).exec();
+    return this.model.findById(new ObjectId(id)).select("-__v").exec();
   }
 
   async update(
@@ -63,11 +64,12 @@ export class MongoProductRepository implements ProductRepository, OnModuleInit {
   ): Promise<ProductDocument | null> {
     return this.model
       .findByIdAndUpdate(new ObjectId(id), data, { new: true })
+      .select("-__v")
       .exec();
   }
 
   async delete(id: string): Promise<ProductDocument | null> {
-    return this.model.findByIdAndDelete(id).exec();
+    return this.model.findByIdAndDelete(id).select("-__v").exec();
   }
 
   async similaritySearch(query: number[], limit: number, threshold: number): Promise<ProductDocument[]> {
@@ -89,9 +91,7 @@ export class MongoProductRepository implements ProductRepository, OnModuleInit {
           originalDescription: 1,
           standardizedDescription: 1,
           category: 1
-
         }
-
       }
     ])
 
