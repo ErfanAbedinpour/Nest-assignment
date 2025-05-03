@@ -40,8 +40,8 @@ export class ProductService {
   }
 
   async findAll(
-    limit: number = 10,
-    page: number = 1,
+    limit: number,
+    page: number,
   ) {
     const results = await this.repository.findAll(limit, page)
     return results.map(r => omit(r.toObject(), ['vector']))
@@ -71,7 +71,7 @@ export class ProductService {
 
   }
 
-  async findSimilarProduct({ id, threshold }: GetSimilarProductQueryDTO) {
+  async findSimilarProduct({ id, threshold, limit }: GetSimilarProductQueryDTO) {
     const product = await this.repository.findById(id);
 
     if (!product)
@@ -80,7 +80,8 @@ export class ProductService {
     if (!product.vector)
       throw new BadRequestException("For This Product Vector Not FOund.")
 
-    const results = await this.repository.similaritySearch(product.vector, 10, 1)
+    console.log('threshold is ', threshold)
+    const results = await this.repository.similaritySearch(product.vector, 10, +threshold)
 
     return results
   }

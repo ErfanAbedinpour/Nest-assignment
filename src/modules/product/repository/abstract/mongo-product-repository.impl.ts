@@ -83,6 +83,11 @@ export class MongoProductRepository implements ProductRepository, OnModuleInit {
           limit: limit,
         },
       },
+      // {
+      //   $match: {
+      //     score: { $gte: threshold },
+      //   },
+      // },
       {
         $project: {
           name: 1,
@@ -90,7 +95,10 @@ export class MongoProductRepository implements ProductRepository, OnModuleInit {
           price: 1,
           originalDescription: 1,
           standardizedDescription: 1,
-          category: 1
+          category: 1,
+          score: {
+            $meta: 'vectorSearchScore',
+          },
         }
       }
     ])

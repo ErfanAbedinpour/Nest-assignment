@@ -14,4 +14,11 @@ export class GetSimilarProductQueryDTO {
   @Max(1)
   @ApiProperty({ description: 'threshold must be between 0,1', example: '0.8' })
   threshold: number;
+
+  @IsNotEmpty()
+  @Type(() => Number)
+  @Min(1)
+  @ApiProperty({ description: 'Limit For Get Product Count', example: 1 })
+  limit: number;
+
 }

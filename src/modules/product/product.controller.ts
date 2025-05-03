@@ -19,13 +19,15 @@ import {
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { ProductDTO } from './DTO/product.dto';
 import { GetSimilarProductQueryDTO } from './DTO/get-similar-product.dto';
+import { GetAllProductDTO } from './DTO/get-all-product.dto';
 
 @Controller('products')
 export class ProductController {
-  constructor(private readonly productService: ProductService) {}
+  constructor(private readonly productService: ProductService) { }
 
   @Post()
   @IsAuth()
@@ -44,8 +46,8 @@ export class ProductController {
     description: 'Product fetched successfully',
     type: [ProductDTO],
   })
-  findAll() {
-    return this.productService.findAll();
+  findAll(@Query() getAllProductDTO: GetAllProductDTO) {
+    return this.productService.findAll(getAllProductDTO.limit || 10, getAllProductDTO.page || 1);
   }
 
   @Get(':id')
@@ -85,6 +87,7 @@ export class ProductController {
   }
 
   @Get(':id/similar')
+  @ApiQuery({ type: GetSimilarProductQueryDTO })
   @ApiOkResponse({
     description: 'Product fetched successfully',
     type: [ProductDTO],
