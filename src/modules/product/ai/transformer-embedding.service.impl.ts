@@ -3,13 +3,13 @@ import { EmbeddingService } from "./abstract/embedding.service";
 import { pipeline } from "@xenova/transformers";
 
 @Injectable()
-export class OpenApiEmbeddingService implements EmbeddingService {
-    private logger = new Logger(OpenApiEmbeddingService.name);
+export class TransformerEmbeddingService implements EmbeddingService {
+    private logger = new Logger(TransformerEmbeddingService.name);
 
     private embedder: any;
 
     async onModuleInit() {
-        this.logger.log('Loading embedding model...');
+        this.logger.log('Loading embedding model. please wait...');
 
         this.embedder = await pipeline(
             'feature-extraction',

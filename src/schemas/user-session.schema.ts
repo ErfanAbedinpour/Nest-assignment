@@ -4,7 +4,7 @@ import { User } from './user.schema';
 
 export type SessionDocument = HydratedDocument<Session>;
 
-@Schema()
+@Schema({ versionKey: false })
 export class Session extends Document {
   @Prop({ type: Types.ObjectId, unique: true })
   tokenId: Types.ObjectId;

@@ -2,11 +2,7 @@ export interface IEnv {
   PORT: number;
   PREFIX: string;
   VERSION: string;
-  MONGO_PORT: number;
-  DB_USERNAME: string;
-  DB_PASSWORD: string;
-  DB_NAME: string;
-  DB_HOST: string;
+  MONGO_URI: string
   ACCESS_TOKEN_SECRET: string;
   ACCESS_TOKEN_EXPIRE: string;
   REFRESH_TOKEN_SECRET: string;
