@@ -7,9 +7,9 @@ import { ProductRepository } from './repository/abstract/product.repository';
 import { MongoProductRepository } from './repository/abstract/mongo-product-repository.impl';
 import { DescriptionService } from './ai/abstract/description.service';
 import { ProductCreatedHandler } from './events/handlers/product-created.handler';
-import { OpenRouterDescriptionService } from './ai/openRouter-description.service.impl';
 import { EmbeddingService } from './ai/abstract/embedding.service';
-import { OpenApiEmbeddingService } from './ai/openApi-embedding.service.impl';
+import { TransformerDescriptionService } from './ai/transformer-description.service.impl';
+import { TransformerEmbeddingService } from './ai/transformer-embedding.service.impl';
 
 @Module({
   imports: [
@@ -17,20 +17,20 @@ import { OpenApiEmbeddingService } from './ai/openApi-embedding.service.impl';
   ],
   controllers: [ProductController],
   providers: [
-    ProductService,
-    ProductCreatedHandler,
     {
       provide: ProductRepository,
       useClass: MongoProductRepository,
     },
     {
       provide: DescriptionService,
-      useClass: OpenRouterDescriptionService,
+      useClass: TransformerDescriptionService,
     },
     {
       provide: EmbeddingService,
-      useClass: OpenApiEmbeddingService
-    }
+      useClass: TransformerEmbeddingService
+    },
+    ProductService,
+    ProductCreatedHandler,
   ],
   exports: [ProductService],
 })

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { ProductRepository } from './repository/abstract/product.repository';
 import { CreateProductDto } from './DTO/create-product.dto';
 import { ProductDocument } from '../../schemas';
@@ -7,13 +11,16 @@ import { UpdateProductDto } from './DTO/update-product.dto';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ProductCreatedEvent } from './events/create-product.event';
 import { omit } from 'lodash';
+import { GetSimilarProductQueryDTO } from './DTO/get-similar-product.dto';
+import { EmbeddingService } from './ai/abstract/embedding.service';
 
 @Injectable()
 export class ProductService {
   constructor(
     private readonly repository: ProductRepository,
     private readonly eventEmitter: EventEmitter2,
-  ) { }
+    private readonly embeddedService: EmbeddingService,
+  ) {}
 
   async create(dto: CreateProductDto) {
     const result = (
@@ -36,20 +43,18 @@ export class ProductService {
     return cleanResult;
   }
 
-  async findAll(
-    limit: number = 10,
-    page: number = 1,
-  ): Promise<ProductDocument[]> {
-    return this.repository.findAll(limit, page);
+  async findAll(limit: number, page: number) {
+    const results = await this.repository.findAll(limit, page);
+    return results.map((r) => omit(r.toObject(), ['vector']));
   }
 
-  async findOne(id: string): Promise<ProductDocument> {
+  async findOne(id: string) {
     const product = await this.repository.findById(id);
     if (!product) throw new NotFoundException(ErrorMessages.PRODUCT_NOT_FOUND);
-    return product;
+    return omit(product.toObject(), ['vector']);
   }
 
-  async update(id: string, dto: UpdateProductDto): Promise<ProductDocument> {
+  async update(id: string, dto: UpdateProductDto) {
     const product = await this.repository.update(id, {
       name: dto.name,
       category: dto.category,
@@ -57,12 +62,33 @@ export class ProductService {
       price: dto.price,
     });
     if (!product) throw new NotFoundException(ErrorMessages.PRODUCT_NOT_FOUND);
-    return product;
+    return omit(product.toObject(), ['vector']);
   }
 
-  async remove(id: string): Promise<ProductDocument> {
+  async remove(id: string) {
     const product = await this.repository.delete(id);
     if (!product) throw new NotFoundException(ErrorMessages.PRODUCT_NOT_FOUND);
-    return product;
+    return omit(product.toObject(), ['vector']);
+  }
+
+  async findSimilarProduct({
+    id,
+    threshold,
+    limit,
+  }: GetSimilarProductQueryDTO) {
+    const product = await this.repository.findById(id);
+
+    if (!product) throw new NotFoundException(ErrorMessages.PRODUCT_NOT_FOUND);
+
+    if (!product.vector)
+      throw new BadRequestException('For This Product Vector Not FOund.');
+
+    const results = await this.repository.similaritySearch(
+      product.vector,
+      limit,
+      +threshold,
+    );
+
+    return results;
   }
 }
