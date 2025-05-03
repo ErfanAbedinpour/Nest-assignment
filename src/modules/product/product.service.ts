@@ -42,17 +42,18 @@ export class ProductService {
   async findAll(
     limit: number = 10,
     page: number = 1,
-  ): Promise<ProductDocument[]> {
-    return this.repository.findAll(limit, page);
+  ) {
+    const results = await this.repository.findAll(limit, page)
+    return results.map(result => omit(result.toObject(), ["vector"]))
   }
 
   async findOne(id: string) {
     const product = await this.repository.findById(id);
     if (!product) throw new NotFoundException(ErrorMessages.PRODUCT_NOT_FOUND);
-    return omit(product, ["vector", "__v"]);
+    return omit(product.toObject(), ["vector", "__v"]);
   }
 
-  async update(id: string, dto: UpdateProductDto): Promise<ProductDocument> {
+  async update(id: string, dto: UpdateProductDto) {
     const product = await this.repository.update(id, {
       name: dto.name,
       category: dto.category,
@@ -60,13 +61,14 @@ export class ProductService {
       price: dto.price,
     });
     if (!product) throw new NotFoundException(ErrorMessages.PRODUCT_NOT_FOUND);
-    return product;
+    return omit(product.toObject(), ["__v", "vector"]);
   }
 
-  async remove(id: string): Promise<ProductDocument> {
+  async remove(id: string) {
     const product = await this.repository.delete(id);
     if (!product) throw new NotFoundException(ErrorMessages.PRODUCT_NOT_FOUND);
-    return product;
+    return omit(product.toObject(), ["vector", "__v"]);
+
   }
 
   async findSimilarProduct({ id, threshold }: GetSimilarProductQueryDTO) {
@@ -81,7 +83,6 @@ export class ProductService {
     const results = await this.repository.similaritySearch(product.vector, 10, 1)
 
     return results
-
   }
 }
 

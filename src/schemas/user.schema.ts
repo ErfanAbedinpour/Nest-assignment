@@ -8,7 +8,7 @@ export enum UserRole {
   USER = 'User',
 }
 
-@Schema()
+@Schema({ versionKey: false })
 export class User extends Document {
   @Prop({ required: true })
   name: string;

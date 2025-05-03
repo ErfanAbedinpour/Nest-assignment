@@ -11,7 +11,6 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 dotenv.config();
 
 
-console.log(process.env.MONGO_URI)
 @Module({
   imports: [
     AuthModule,
