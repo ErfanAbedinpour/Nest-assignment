@@ -19,7 +19,6 @@ import {
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
-  ApiQuery,
 } from '@nestjs/swagger';
 import { ProductDTO } from './DTO/product.dto';
 import { GetSimilarProductQueryDTO } from './DTO/get-similar-product.dto';
@@ -27,7 +26,7 @@ import { GetAllProductDTO } from './DTO/get-all-product.dto';
 
 @Controller('products')
 export class ProductController {
-  constructor(private readonly productService: ProductService) {}
+  constructor(private readonly productService: ProductService) { }
 
   @Post()
   @IsAuth()

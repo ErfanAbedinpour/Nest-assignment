@@ -5,22 +5,19 @@ import {
 } from '@nestjs/common';
 import { ProductRepository } from './repository/abstract/product.repository';
 import { CreateProductDto } from './DTO/create-product.dto';
-import { ProductDocument } from '../../schemas';
 import { ErrorMessages } from '../../errorResponses/errorResponse.enum ';
 import { UpdateProductDto } from './DTO/update-product.dto';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ProductCreatedEvent } from './events/create-product.event';
 import { omit } from 'lodash';
 import { GetSimilarProductQueryDTO } from './DTO/get-similar-product.dto';
-import { EmbeddingService } from './ai/abstract/embedding.service';
 
 @Injectable()
 export class ProductService {
   constructor(
     private readonly repository: ProductRepository,
-    private readonly eventEmitter: EventEmitter2,
-    private readonly embeddedService: EmbeddingService,
-  ) {}
+    private readonly eventEmitter: EventEmitter2
+  ) { }
 
   async create(dto: CreateProductDto) {
     const result = (

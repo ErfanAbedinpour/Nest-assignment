@@ -25,8 +25,8 @@ export class UserService {
     role?: UserRole,
   ) {
     try {
-      await this.userRepository.create({ email, name, password, role });
-      return { msg: 'User Created successfully' };
+      const createdUser = await this.userRepository.create({ email, name, password, role });
+      return createdUser;
     } catch (err) {
       // handling MongoException
       if (err instanceof MongoServerError) {
