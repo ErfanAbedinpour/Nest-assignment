@@ -24,9 +24,11 @@ export class RoleAccessGuard implements CanActivate {
 
     for (const meta of roleMeta) {
       if (!meta) continue;
+
       else if (meta !== req.user.role) {
         throw new ForbiddenException(ErrorMessages.INVALID_ACCESS);
       }
+
     }
 
     try {

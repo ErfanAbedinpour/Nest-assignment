@@ -16,4 +16,6 @@ export abstract class UserRepository {
   ): Promise<UserDocument>;
 
   abstract getDocumentLength(): Promise<number>;
+
+  abstract getAll(): Promise<UserDocument[]>
 }
