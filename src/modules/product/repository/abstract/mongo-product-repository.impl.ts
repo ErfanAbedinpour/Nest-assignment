@@ -8,15 +8,11 @@ import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class MongoProductRepository implements ProductRepository, OnModuleInit {
-  constructor(@InjectModel(Product.name) private model: Model<Product>) {}
+  constructor(@InjectModel(Product.name) private model: Model<Product>) { }
 
-  /**
-   * Create vector Search Index
-   */
   async onModuleInit() {
     /**
      *  Create Vector Search Index
-     *
      */
     const index = {
       name: 'vector_idx',
@@ -75,6 +71,9 @@ export class MongoProductRepository implements ProductRepository, OnModuleInit {
     limit: number,
     threshold: number,
   ): Promise<ProductDocument[]> {
+    /**
+     * Uses Vector Search Index For Finding Similar Product 
+     */
     const results = await this.model.aggregate([
       {
         $vectorSearch: {
@@ -105,8 +104,6 @@ export class MongoProductRepository implements ProductRepository, OnModuleInit {
       },
     ]);
 
-    /**
-     *      */
     return results;
   }
 }
