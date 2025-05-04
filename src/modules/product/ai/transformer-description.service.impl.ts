@@ -12,8 +12,7 @@ import {
 } from '@xenova/transformers';
 
 export class TransformerDescriptionService
-  implements DescriptionService, OnModuleInit
-{
+  implements DescriptionService, OnModuleInit {
   private generator: Text2TextGenerationPipeline;
   private logger = new Logger(TransformerDescriptionService.name);
 
@@ -47,7 +46,7 @@ export class TransformerDescriptionService
 
       return output[0].generated_text;
     } catch (err) {
-      this.logger.error(err);
+      // this.logger.error(err);
       throw new InternalServerErrorException();
     }
   }

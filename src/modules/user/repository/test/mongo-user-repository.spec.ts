@@ -1,20 +1,26 @@
 import { Test } from '@nestjs/testing';
 import { MongoUserRepository } from '../mongo-user-repository';
 import { getModelToken } from '@nestjs/mongoose';
-import { User, UserDocument, UserRole } from '../../../../schemas';
+import { User, UserRole } from '../../../../schemas';
 import { Model } from 'mongoose';
 import { RepositoryException } from '../../../../exception/respository.exception';
 import { ErrorMessages } from '../../../../errorResponses/errorResponse.enum ';
-import { resourceUsage } from 'process';
 
 describe('MongoUserRepository', () => {
   let repository: MongoUserRepository;
+  const execMock = jest.fn();
+
+  const selectMock = jest.fn().mockReturnValue({
+    exec: execMock,
+  })
+
   const userModelMock = {
     create: jest.fn(),
-    findById: jest.fn(),
+    findById: jest.fn().mockReturnValue({ select: selectMock }),
     deleteOne: jest.fn(),
-    findOneAndUpdate: jest.fn(),
+    findOneAndUpdate: jest.fn().mockReturnValue({ select: selectMock }),
   } as unknown as Model<User>;
+
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -53,10 +59,12 @@ describe('MongoUserRepository', () => {
   });
 
   it('Should be find UserDocument', async () => {
-    jest.spyOn(userModelMock, 'findById').mockResolvedValue({
+    const mockUser = {
       email: 'test-mail',
       name: 'test-name',
-    } as unknown as UserDocument);
+    }
+
+    execMock.mockResolvedValueOnce(mockUser);
 
     const result = await repository.findById('true-object-id');
 
@@ -89,7 +97,7 @@ describe('MongoUserRepository', () => {
   });
 
   it('Should be Throw Exception Because Doc not found', async () => {
-    jest.spyOn(userModelMock, 'findOneAndUpdate').mockResolvedValueOnce(null);
+    execMock.mockResolvedValueOnce(null)
     try {
       await repository.update('wrong-object-id', {});
     } catch (err) {
@@ -106,10 +114,7 @@ describe('MongoUserRepository', () => {
   it('Should be Updated successfully', async () => {
     const payload = { email: 'new-test-mail', name: 'new-name' };
 
-    jest
-      .spyOn(userModelMock, 'findOneAndUpdate')
-      .mockResolvedValueOnce(payload as unknown as UserDocument);
-
+    execMock.mockResolvedValueOnce(payload)
     const result = await repository.update('true-object-id', payload);
     expect(result.name).toEqual('new-name');
     expect(result.email).toEqual('new-test-mail');

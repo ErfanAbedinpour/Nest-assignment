@@ -11,24 +11,24 @@ import { ErrorMessages } from '../../../errorResponses/errorResponse.enum ';
 export class MongoUserRepository implements UserRepository {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<User>,
-  ) {}
+  ) { }
 
-  async create(user: UserPersist): Promise<void> {
+  async create(user: UserPersist): Promise<UserDocument> {
     try {
-      await this.userModel.create({
+      const createdUser = await this.userModel.create({
         email: user.email,
         password: user.password,
         name: user.name,
         role: user.role ?? UserRole.USER,
       });
-      return;
+      return createdUser;
     } catch (err) {
       throw err;
     }
   }
 
   findById(id: string): Promise<UserDocument | null> {
-    return this.userModel.findById(id);
+    return this.userModel.findById(id).select("-__v").exec();
   }
 
   async delete(id: string): Promise<boolean> {
@@ -44,7 +44,8 @@ export class MongoUserRepository implements UserRepository {
     try {
       const result = await this.userModel.findOneAndUpdate({ _id: id }, data, {
         new: true,
-      });
+      }).select('-__v').exec();
+
       if (!result) throw new RepositoryException(ErrorMessages.USER_NOT_FOUND);
 
       return result;
@@ -54,10 +55,17 @@ export class MongoUserRepository implements UserRepository {
   }
 
   findByEmail(email: string): Promise<UserDocument | null> {
-    return this.userModel.findOne({ email });
+    return this.userModel.findOne({ email }).select("-__v").exec();
   }
 
   getDocumentLength(): Promise<number> {
     return this.userModel.countDocuments();
   }
+
+
+  getAll(): Promise<UserDocument[]> {
+    return this.userModel.find({}).select("-__v -password").exec()
+
+  }
 }
+
