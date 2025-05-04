@@ -11,7 +11,7 @@ import { ErrorMessages } from '../../../errorResponses/errorResponse.enum ';
 export class MongoUserRepository implements UserRepository {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<User>,
-  ) {}
+  ) { }
 
   async create(user: UserPersist): Promise<void> {
     try {
@@ -60,4 +60,11 @@ export class MongoUserRepository implements UserRepository {
   getDocumentLength(): Promise<number> {
     return this.userModel.countDocuments();
   }
+
+
+  getAll(): Promise<UserDocument[]> {
+    return this.userModel.find({}).select("-__v -password").exec()
+
+  }
 }
+

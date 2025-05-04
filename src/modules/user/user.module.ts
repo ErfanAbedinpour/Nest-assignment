@@ -4,11 +4,13 @@ import { User, UserSchema } from '../../schemas';
 import { UserRepository } from './repository/abstract/user.repository';
 import { MongoUserRepository } from './repository/mongo-user-repository';
 import { UserService } from './user.service';
+import { UserController } from './user.controller';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],
+  controllers: [UserController],
   providers: [
     {
       provide: UserRepository,
@@ -18,4 +20,4 @@ import { UserService } from './user.service';
   ],
   exports: [UserService],
 })
-export class UserModule {}
+export class UserModule { }

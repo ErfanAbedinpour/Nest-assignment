@@ -9,10 +9,11 @@ import { UserRepository } from './repository/abstract/user.repository';
 import { UserDocument, UserRole } from '../../schemas';
 import { MongoServerError, ObjectId } from 'mongodb';
 import { ErrorMessages } from '../../errorResponses/errorResponse.enum ';
+import { UpdateUserDTO } from './DTO/update-user.dto';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(private readonly userRepository: UserRepository) { }
 
   private readonly logger = new Logger(UserService.name);
 
@@ -38,7 +39,7 @@ export class UserService {
     }
   }
 
-  async findUserById(id: ObjectId): Promise<UserDocument> {
+  async findUserById(id: string): Promise<UserDocument> {
     const user = await this.userRepository.findById(id.toString());
 
     if (!user) throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
@@ -56,5 +57,42 @@ export class UserService {
 
   getUsersLength() {
     return this.userRepository.getDocumentLength();
+  }
+
+
+  getAllUsers() {
+    return this.userRepository.getAll();
+  }
+
+  async updateUser(userId: string, updateUserDto: UpdateUserDTO) {
+    const user = await this.userRepository.findById(userId)
+
+    if (!user)
+      throw new NotFoundException(ErrorMessages.USER_NOT_FOUND)
+
+    try {
+      const result = await this.userRepository.update(userId, updateUserDto)
+      return result
+    } catch (err) {
+      this.logger.error(err)
+      throw new InternalServerErrorException()
+    }
+
+  }
+
+
+  async deleteUser(userId: string) {
+    const user = await this.userRepository.findById(userId)
+
+    if (!user)
+      throw new NotFoundException(ErrorMessages.USER_NOT_FOUND)
+
+    try {
+      await this.userRepository.delete(userId)
+      return { msg: "User Removed successfully" }
+    } catch (err) {
+      this.logger.error(err)
+      throw new InternalServerErrorException()
+    }
   }
 }
