@@ -1,11 +1,10 @@
 import { Test } from '@nestjs/testing';
 import { MongoUserRepository } from '../mongo-user-repository';
 import { getModelToken } from '@nestjs/mongoose';
-import { User, UserDocument, UserRole } from '../../../../schemas';
+import { User, UserRole } from '../../../../schemas';
 import { Model } from 'mongoose';
 import { RepositoryException } from '../../../../exception/respository.exception';
 import { ErrorMessages } from '../../../../errorResponses/errorResponse.enum ';
-import { resourceUsage } from 'process';
 
 describe('MongoUserRepository', () => {
   let repository: MongoUserRepository;

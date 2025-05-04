@@ -13,15 +13,15 @@ export class MongoUserRepository implements UserRepository {
     @InjectModel(User.name) private readonly userModel: Model<User>,
   ) { }
 
-  async create(user: UserPersist): Promise<void> {
+  async create(user: UserPersist): Promise<UserDocument> {
     try {
-      await this.userModel.create({
+      const createdUser = await this.userModel.create({
         email: user.email,
         password: user.password,
         name: user.name,
         role: user.role ?? UserRole.USER,
       });
-      return;
+      return createdUser;
     } catch (err) {
       throw err;
     }

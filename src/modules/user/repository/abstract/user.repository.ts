@@ -2,7 +2,7 @@ import { UserPersist } from '../persistance/user-persist';
 import { User, UserDocument } from '../../../../schemas';
 
 export abstract class UserRepository {
-  abstract create(user: UserPersist): Promise<void>;
+  abstract create(user: UserPersist): Promise<UserDocument>;
 
   abstract findById(id: string): Promise<UserDocument | null>;
 
