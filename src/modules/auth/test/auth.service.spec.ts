@@ -212,7 +212,7 @@ describe('AuthService', function () {
     });
 
     it('Should be Throw BadRequest Because User Not found', async () => {
-      const objId = new Types.ObjectId();
+      const objId = 'test-object-id'
       jest.spyOn(mockTokenService, 'verifyRefreshToken').mockResolvedValueOnce({
         tokenId: 'test-tokenId',
         userId: objId.toString(),
@@ -241,7 +241,7 @@ describe('AuthService', function () {
     });
 
     it('Should be Generate new Token Successfully', async () => {
-      const objId = new Types.ObjectId();
+      const objId = "test-object-id"
       const fakeUserInput = {
         email: 'test-mail',
         name: 'test-name',

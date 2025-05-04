@@ -23,7 +23,7 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly argonHashing: HashingService,
     private readonly userTokenService: UserTokenService,
-  ) {}
+  ) { }
 
   private readonly logger = new Logger(AuthService.name);
 
@@ -106,7 +106,7 @@ export class AuthService {
       await this.userTokenService.invalidate(tokenPayload.tokenId);
 
       const user = await this.userService.findUserById(
-        new ObjectId(tokenPayload.userId),
+        tokenPayload.userId,
       );
 
       if (!user) throw new BadRequestException(ErrorMessages.USER_NOT_FOUND);
