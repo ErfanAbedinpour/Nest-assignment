@@ -37,6 +37,7 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
+
 # 🧠 AI-Powered Product Management API
 
 A scalable, maintainable, and feature-rich product management system powered by NestJS and enhanced with AI-based description standardization and similarity search.
@@ -137,7 +138,9 @@ A scalable, maintainable, and feature-rich product management system powered by 
 - ✅ Run all tests:
   ```bash
   npm run test
-````
+  ```
+
+```
 
 ## ⚙️ Setup Instructions
 
@@ -156,3 +159,4 @@ cp .env.example .env
 # 4. Run the app
 
 npm start:dev
+```
