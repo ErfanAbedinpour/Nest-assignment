@@ -11,7 +11,6 @@ import { MongoServerError, ObjectId } from 'mongodb';
 import { ErrorMessages } from '../../errorResponses/errorResponse.enum ';
 import { UpdateUserDTO } from './DTO/update-user.dto';
 import { omit } from 'lodash';
-import { UserDTO } from './DTO/user.dto';
 
 @Injectable()
 export class UserService {
