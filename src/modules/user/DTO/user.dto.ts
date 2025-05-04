@@ -24,18 +24,4 @@ export class UserDTO {
     @MinLength(3)
     @IsEnum(UserRole)
     role: UserRole
-
-    @ApiProperty({
-        description: 'Creating Date',
-        type: Number,
-        default: new Date(),
-    })
-    createdAt: Date
-
-    @ApiProperty({
-        description: 'Updating Date',
-        type: Number,
-        default: new Date(),
-    })
-    updatedAt: Date
 }

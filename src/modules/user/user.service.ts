@@ -10,6 +10,8 @@ import { UserDocument, UserRole } from '../../schemas';
 import { MongoServerError, ObjectId } from 'mongodb';
 import { ErrorMessages } from '../../errorResponses/errorResponse.enum ';
 import { UpdateUserDTO } from './DTO/update-user.dto';
+import { omit } from 'lodash';
+import { UserDTO } from './DTO/user.dto';
 
 @Injectable()
 export class UserService {
@@ -72,7 +74,7 @@ export class UserService {
 
     try {
       const result = await this.userRepository.update(userId, updateUserDto)
-      return result
+      return omit(result.toObject(), ['password'])
     } catch (err) {
       this.logger.error(err)
       throw new InternalServerErrorException()

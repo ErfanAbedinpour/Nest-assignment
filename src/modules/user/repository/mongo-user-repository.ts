@@ -28,7 +28,7 @@ export class MongoUserRepository implements UserRepository {
   }
 
   findById(id: string): Promise<UserDocument | null> {
-    return this.userModel.findById(id);
+    return this.userModel.findById(id).select("-__v").exec();
   }
 
   async delete(id: string): Promise<boolean> {
@@ -44,7 +44,8 @@ export class MongoUserRepository implements UserRepository {
     try {
       const result = await this.userModel.findOneAndUpdate({ _id: id }, data, {
         new: true,
-      });
+      }).select('-__v').exec();
+
       if (!result) throw new RepositoryException(ErrorMessages.USER_NOT_FOUND);
 
       return result;
@@ -54,7 +55,7 @@ export class MongoUserRepository implements UserRepository {
   }
 
   findByEmail(email: string): Promise<UserDocument | null> {
-    return this.userModel.findOne({ email });
+    return this.userModel.findOne({ email }).select("-__v").exec();
   }
 
   getDocumentLength(): Promise<number> {

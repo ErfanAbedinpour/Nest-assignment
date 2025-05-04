@@ -8,6 +8,9 @@ import { ObjectId } from 'mongodb'
 import { ProductDTO } from "../product/DTO/product.dto";
 import { UpdateUserDTO } from "./DTO/update-user.dto";
 import { GetUser } from "../auth/decorator/get-user.decorator";
+import { UserDTO } from "./DTO/user.dto";
+import { IsObjectIdPipe } from "@nestjs/mongoose";
+import { omit } from "lodash";
 
 @Controller("users")
 @IsAuth()
@@ -19,31 +22,35 @@ export class UserController {
     constructor(private readonly userService: UserService) { }
 
     @Get("me")
+    @ApiOkResponse({ schema: { properties: { name: { type: 'string' }, role: { type: "string" }, id: { type: 'string' } } } })
     getMe(@GetUser() user) {
         return user;
     }
 
     @Get()
-    @ApiOkResponse({ description: "GetAllUsers", type: [ProductDTO] })
+    @ApiOkResponse({ description: "GetAllUsers", type: [UserDTO] })
     getUsers() {
         return this.userService.getAllUsers();
     }
 
     @Get(":id")
-    @ApiOkResponse({ description: "GetUserById", type: ProductDTO })
-    getUserById(@Param("id", ParseUUIDPipe) userId: string) {
-        return this.userService.findUserById(userId);
+    @ApiOkResponse({ description: "GetUserById", type: UserDTO })
+    async getUserById(@Param("id", IsObjectIdPipe) userId: string) {
+        const user = await this.userService.findUserById(userId);
+
+        return omit(user.toObject(), ['password'])
     }
 
 
     @Patch(":id")
-    updateUser(@Param("id", ParseUUIDPipe) userId: string, @Body() updatedUserDto: UpdateUserDTO) {
+    updateUser(@Param("id", IsObjectIdPipe) userId: string, @Body() updatedUserDto: UpdateUserDTO, @GetUser("userId") id: string) {
+
         return this.userService.updateUser(userId, updatedUserDto);
     }
 
 
     @Delete(":id")
-    deleteUser(@Param("id", ParseUUIDPipe) userId: string) {
+    deleteUser(@Param("id", IsObjectIdPipe) userId: string) {
         return this.userService.deleteUser(userId);
     }
 
